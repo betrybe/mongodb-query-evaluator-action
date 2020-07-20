@@ -1,2 +1,1 @@
-# mongodb-query-evaluator-action
-MongoDB Query Evaluator Action
+# MongoDB Query Evaluator Action
