@@ -9,9 +9,9 @@ CHALLENGES_DIR=$1
 for entry in "$CHALLENGES_DIR"/*.js
 do
   # Get challenge name
-  challengeName=$(echo "$entry" | sed -e "s/.js//g" | sed -e "s/challenges\///g")
+  challengeName=$(echo "$entry" | sed -e "s/.js//g" | sed -e "s/$CHALLENGES_DIR\///g")
   # Build path to results dir
-  resultFile="challenges/results/$challengeName"
+  resultFile="$CHALLENGES_DIR/results/$challengeName"
   # Exec query
   ./scripts/exec.sh "$entry" &> "$resultFile"
   # Check result with the expected

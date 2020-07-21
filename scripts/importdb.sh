@@ -24,6 +24,6 @@ docker exec "$mongoContainerID" bash -c "mongo $DBNAME --eval 'db.dropDatabase()
 # Restore aggregation
 for entry in "$IMPORT_DIR"/*.bson
 do
-    collection=$(echo "$entry" | sed -e "s/.js//g" | sed -e "s/assets\///g")
-    docker exec "$mongoContainerID" bash -c "mongorestore --db $DBNAME /project/assets/$collection.bson"
+    collection=$(echo "$entry" | sed -e "s/.bson//g" | sed -e "s/$IMPORT_DIR\///g")
+    docker exec "$mongoContainerID" bash -c "mongorestore --db $DBNAME $IMPORT_DIR/$collection.bson"
 done

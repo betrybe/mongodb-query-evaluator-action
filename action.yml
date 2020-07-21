@@ -14,3 +14,4 @@ runs:
   image: 'Dockerfile'
   args:
     - ${{ inputs.repository-import-folder }}
+    - ${{ inputs.repository-challenges-folder }}
