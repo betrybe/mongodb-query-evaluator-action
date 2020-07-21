@@ -1,10 +1,12 @@
 #!/bin/sh -l
+set -x
 
 if [[ -z "$1" ]]; then
     echo "You must pass the challenges dir as the first argument"
     exit 1
 fi
 CHALLENGES_DIR=$1
+ls -l "/github/workspace/$CHALLENGES_DIR"
 
 for entry in "/github/workspace/$CHALLENGES_DIR"/*.js
 do

@@ -1,4 +1,5 @@
 #!/bin/sh -l
+set -x
 
 if [[ -z "$DBNAME" ]]; then
     echo "You must set envvar DBNAME"
@@ -22,6 +23,8 @@ fi
 docker exec "$mongoContainerID" bash -c "mongo $DBNAME --eval 'db.dropDatabase()'"
 
 # Restore aggregation
+ls -l "/github/workspace/$IMPORT_DIR"
+
 for entry in "/github/workspace/$IMPORT_DIR"/*.bson
 do
     collection=$(echo "$entry" | sed -e "s/.bson//g" | sed -e "s/\/github\/workspace\/$IMPORT_DIR\///g")
