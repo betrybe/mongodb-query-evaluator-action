@@ -6,16 +6,16 @@ if [[ -z "$1" ]]; then
 fi
 CHALLENGES_DIR=$1
 
-for entry in "$CHALLENGES_DIR"/*.js
+for entry in "/github/workspace/$CHALLENGES_DIR"/*.js
 do
   # Get challenge name
-  challengeName=$(echo "$entry" | sed -e "s/.js//g" | sed -e "s/$CHALLENGES_DIR\///g")
+  challengeName=$(echo "$entry" | sed -e "s/.js//g" | sed -e "s/\/github\/workspace\/$CHALLENGES_DIR\///g")
   # Build path to results dir
-  resultFile="$CHALLENGES_DIR/results/$challengeName"
+  resultFile="/github/workspace/$CHALLENGES_DIR/results/$challengeName"
   # Exec query
   ./scripts/exec.sh "$entry" &> "$resultFile"
   # Check result with the expected
-  if [[ ! -z $(diff "$resultFile" ".challenges-expected/$challengeName") ]]; then
+  if [[ ! -z $(diff "$resultFile" "/github/workspace/.challenges-expected/$challengeName") ]]; then
     echo "$challengeName failed"
     continue
   fi
