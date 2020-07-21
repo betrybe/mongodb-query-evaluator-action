@@ -12,19 +12,27 @@ if [[ -z "$2" ]]; then
 fi
 MONGO_WORKDIR=$2
 
+RESULTS_DIR=/tmp/trybe-results
+mkdir "$RESULTS_DIR"
+
+FAILED=0
 for entry in "/github/workspace/$CHALLENGES_DIR"/*.js
 do
   # Get challenge name
   challengeName=$(echo "$entry" | sed -e "s/.js//g" | sed -e "s/\/github\/workspace\/$CHALLENGES_DIR\///g")
   # Build path to results dir
-  resultFile="/$MONGO_WORKDIR/$CHALLENGES_DIR/results/$challengeName"
+  resultPath="$RESULTS_DIR/$challengeName"
   # Exec query into mongo container
-  ./scripts/exec.sh "/$MONGO_WORKDIR/$CHALLENGES_DIR/$challengeName.js" &> "$resultFile"
+  /scripts/exec.sh "/$MONGO_WORKDIR/$CHALLENGES_DIR/$challengeName.js" &> "$resultPath"
+  cat "$resultPath"
   # Check result with the expected
-  if [[ ! -z $(diff "$resultFile" "/github/workspace/.challenges-expected/$challengeName") ]]; then
+  if [[ ! -z $(diff "$resultPath" "/github/workspace/.challenges-expected/$challengeName") ]]; then
     echo "$challengeName failed"
+    FAILED=1
     continue
   fi
 
   echo "$challengeName passed"
 done
+
+exit $FAILED
