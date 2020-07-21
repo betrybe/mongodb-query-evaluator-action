@@ -3,6 +3,11 @@ description: 'MongoDB query evaluator action for Tryber projects'
 inputs:
   repository-import-folder:
     description: 'GitHub repository folder that contains the BSON to import.'
+    default: 'assets'
+    required: true
+  repository-challenges-folder:
+    description: 'GitHub repository folder that contains the MQL scripts.'
+    default: 'challenges'
     required: true
 outputs:
   # result:

@@ -11,7 +11,6 @@ if [[ -z "$1" ]]; then
 fi
 IMPORT_DIR=$1
 
-docker ps
 # Get MongoDB Container ID
 mongoContainerID=$(docker ps --format "{{.ID}} {{.Names}}" | grep mongo | cut -d ' ' -f1)
 if [[ -z "$mongoContainerID" ]]; then
@@ -22,10 +21,15 @@ fi
 # Reset DB
 docker exec "$mongoContainerID" bash -c "mongo $DBNAME --eval 'db.dropDatabase()'"
 
-# Restore aggregation
-ls -l "/github/workspace/$IMPORT_DIR"
+# Extract BSON's
+for entry in /github/workspace/"$IMPORT_DIR"/*.tar.gz
+do
+    tar -xvf "$entry" -C "/github/workspace/$IMPORT_DIR"
+done
 
-for entry in "/github/workspace/$IMPORT_DIR"/*.bson
+ls -l /github/workspace/"$IMPORT_DIR"
+# Restore aggregations
+for entry in /github/workspace/"$IMPORT_DIR"/*.bson
 do
     collection=$(echo "$entry" | sed -e "s/.bson//g" | sed -e "s/\/github\/workspace\/$IMPORT_DIR\///g")
     docker exec "$mongoContainerID" bash -c "mongorestore --db $DBNAME /github/workspace/$IMPORT_DIR/$collection.bson"
