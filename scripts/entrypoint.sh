@@ -2,14 +2,10 @@
 set -x
 
 IMPORT_DIR=$1
-
-echo "$GITHUB_REPOSITORY"
-echo "$GITHUB_ACTOR"
-echo "$GITHUB_REF"
-ls -l
+CHALLENGES_DIR=$2
 
 /scripts/importdb.sh "$IMPORT_DIR"
-/scripts/generate_result.sh
+/scripts/generate_result.sh "$CHALLENGES_DIR"
 
 if [ $? != 0 ]; then
   echo "Execution error"

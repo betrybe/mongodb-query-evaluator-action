@@ -1,6 +1,12 @@
 #!/bin/sh -l
 
-for entry in challenges/*.js
+if [[ -z "$1" ]]; then
+    echo "You must pass the challenges dir as the first argument"
+    exit 1
+fi
+CHALLENGES_DIR=$1
+
+for entry in "$CHALLENGES_DIR"/*.js
 do
   # Get challenge name
   challengeName=$(echo "$entry" | sed -e "s/.js//g" | sed -e "s/challenges\///g")
