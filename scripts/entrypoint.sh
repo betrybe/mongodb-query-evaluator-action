@@ -3,8 +3,9 @@ set -x
 
 IMPORT_DIR=$1
 CHALLENGES_DIR=$2
+MONGO_WORKDIR=$2;
 
-/scripts/importdb.sh "$IMPORT_DIR"
+/scripts/importdb.sh "$IMPORT_DIR" "$MONGO_WORKDIR"
 /scripts/generate_result.sh "$CHALLENGES_DIR"
 
 if [ $? != 0 ]; then
