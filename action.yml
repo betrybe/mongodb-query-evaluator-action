@@ -1,0 +1,16 @@
+name: 'MongoDB query evaluator'
+description: 'MongoDB query evaluator action for Tryber projects'
+inputs:
+  repository-import-folder:
+    description: 'GitHub repository folder that contains the BSON to import.'
+    required: true
+outputs:
+  # result:
+  #   description: 'Jest unit tests JSON results in base64 format.'
+  pr-number:
+    description: 'Pull Request number that trigger build.'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.repository-import-folder }}
