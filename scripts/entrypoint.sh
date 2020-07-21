@@ -3,10 +3,10 @@ set -x
 
 IMPORT_DIR=$1
 CHALLENGES_DIR=$2
-MONGO_WORKDIR=$2;
+MONGO_WORKDIR=$3
 
 /scripts/importdb.sh "$IMPORT_DIR" "$MONGO_WORKDIR"
-/scripts/generate_result.sh "$CHALLENGES_DIR"
+/scripts/generate_result.sh "$CHALLENGES_DIR" "$MONGO_WORKDIR"
 
 if [ $? != 0 ]; then
   echo "Execution error"

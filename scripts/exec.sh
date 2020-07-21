@@ -11,7 +11,6 @@ if [[ -z "$1"  ]]; then
 fi
 mqlFile=$1
 
-
 # Get MongoDB Container ID
 mongoContainerID=$(docker ps --format "{{.ID}} {{.Image}}" | grep mongo | cut -d ' ' -f1)
 if [[ -z "$mongoContainerID" ]]; then
@@ -20,5 +19,6 @@ if [[ -z "$mongoContainerID" ]]; then
 fi
 
 # Exec MQL
+echo "$mqlFile"
 cmd="mongo $DBNAME --quiet --eval 'DBQuery.shellBatchSize = 100000; $(cat $mqlFile)'"
 docker exec "$mongoContainerID" bash -c "$cmd" || exit 1
