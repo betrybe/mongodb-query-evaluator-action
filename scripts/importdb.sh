@@ -1,10 +1,11 @@
-#!/bin/bash
+#!/bin/sh -l
 
 if [[ -z "$DBNAME" ]]; then
     echo "You must set envvar DBNAME"
     exit 1
 fi
 
+docker ps
 # Get MongoDB Container ID
 mongoContainerID=$(docker ps --format "{{.ID}} {{.Names}}" | grep mongo | cut -d ' ' -f1)
 if [[ -z "$mongoContainerID" ]]; then

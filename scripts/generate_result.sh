@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh -l
 
 for entry in challenges/*.js
 do

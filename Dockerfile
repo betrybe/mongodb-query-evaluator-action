@@ -1,6 +1,10 @@
-FROM elixir:1.9-alpine
+FROM alpine:3.12.0
 
-COPY scripts/ /
-RUN ls -l
+RUN apk update && apk add docker
 
-ENTRYPOINT ["/entrypoint.sh"]
+COPY scripts/ /scripts
+RUN chmod a+x -R scripts/*.sh
+
+WORKDIR /
+
+ENTRYPOINT ["/scripts/entrypoint.sh"]

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh -l
 
 if [[ -z "$DBNAME" ]]; then
     echo "You must set envvar DBNAME"
