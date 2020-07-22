@@ -26,7 +26,6 @@ doc='{"github_username": "'"$GITHUB_ACTOR"'","github_repository_name": "'"$GITHU
 scripts/exec.sh "db.trybe_evaluation.insertOne($doc)"
 
 identifier='{"github_username": "'"$GITHUB_ACTOR"'"}'
-FAILED=0
 for entry in "$CHALLENGES_DIR"/*.js
 do
   # Get challenge name
@@ -40,16 +39,13 @@ do
   # Check result with the expected and update result collection
   diff=$(diff "$resultPath" "$EXPECTED_DIR/$challengeName")
   if [[ ! -z "$diff" ]]; then
-    update='{"$addToSet": {"evaluations": {"identifier": "'"$challengeName"'","grade": 1}}}'
-    scripts/exec.sh "db.trybe_evaluation.update($identifier, $update)" || exit 1
-    FAILED=1
+    update='{"$addToSet": {"evaluations": {"identifier": "'"$challengeName"'","description": "'"$challengeName"'","grade": 1}}}'
+    scripts/exec.sh "db.trybe_evaluation.update($identifier, $update)"
     continue
   fi
 
-  update='{"$addToSet": {"evaluations": {"identifier": "'"$challengeName"'","grade": 3}}}'
-  scripts/exec.sh "db.trybe_evaluation.update($identifier, $update)" || exit 1
+  update='{"$addToSet": {"evaluations": {"identifier": "'"$challengeName"'","description": "'"$challengeName"'","grade": 3}}}'
+  scripts/exec.sh "db.trybe_evaluation.update($identifier, $update)"
 done
 
 scripts/exec.sh "db.trybe_evaluation.find()" > "$RESULTS_DIR/evaluation_result.json"
-
-exit $FAILED

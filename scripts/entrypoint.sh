@@ -8,7 +8,7 @@ scripts/importdb.sh "/github/workspace/$IMPORT_DIR"
 scripts/generate_result.sh "/github/workspace/$CHALLENGES_DIR" "/github/workspace/.challenges-expected"
 
 if [ $? != 0 ]; then
-  printf "Execution error"
+  printf "Execution error $?"
   exit 1
 fi
 
