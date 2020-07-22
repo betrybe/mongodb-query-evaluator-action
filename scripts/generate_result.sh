@@ -19,14 +19,18 @@ FAILED=0
 for entry in "/github/workspace/$CHALLENGES_DIR"/*.js
 do
   # Get challenge name
-  challengeName=$(printf '%s' "$entry" | sed -e "s/.js//g" | sed -e "s/\/github\/workspace\/$CHALLENGES_DIR\///g")
+  challengeName=$(echo "$entry" | sed -e "s/.js//g" | sed -e "s/\/github\/workspace\/$CHALLENGES_DIR\///g")
+  echo "======> $challengeName"
   # Build path to results dir
   resultPath="$RESULTS_DIR/$challengeName"
   touch "$resultPath"
   # Exec query into mongo container
   /scripts/exec.sh "/$MONGO_WORKDIR/$CHALLENGES_DIR/$challengeName.js" &> "$resultPath"
   # Check result with the expected
-  if [[ ! -z "$(diff "$resultPath" /github/workspace/.challenges-expected/$challengeName)" ]]; then
+  cat "/github/workspace/.challenges-expected/$challengeName"
+  echo "======> RESULT"
+  cat "$resultPath"
+  if [[ ! -z $(diff "$resultPath" /github/workspace/.challenges-expected/"$challengeName") ]]; then
     printf "$challengeName failed"
     FAILED=1
     continue
