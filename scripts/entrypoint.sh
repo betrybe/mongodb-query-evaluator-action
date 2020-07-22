@@ -12,5 +12,5 @@ if [ $? != 0 ]; then
   exit 1
 fi
 
-printf ::set-output name=result::`cat /tmp/trybe-results/evaluation_result.json | base64 -w 0`
-printf ::set-output name=pr-number::$(echo "$GITHUB_REF" | awk -F / '{print $3}')
+echo ::set-output name=result::`cat /tmp/trybe-results/evaluation_result.json | base64 -w 0`
+echo ::set-output name=pr-number::$(echo "$GITHUB_REF" | awk -F / '{print $3}')
