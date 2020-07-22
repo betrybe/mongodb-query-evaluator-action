@@ -3,9 +3,11 @@
 IMPORT_DIR=$1
 CHALLENGES_DIR=$2
 
+git clone https://github.com/$GITHUB_REPOSITORY.git /github/master-repo/
+
 cd /
 scripts/importdb.sh "/github/workspace/$IMPORT_DIR"
-scripts/generate_result.sh "/github/workspace/$CHALLENGES_DIR" "/github/workspace/.challenges-expected"
+scripts/generate_result.sh "/github/workspace/$CHALLENGES_DIR" "/github/master-repo/.challenges-expected"
 
 if [ $? != 0 ]; then
   printf "Execution error $?"
