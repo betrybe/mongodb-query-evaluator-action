@@ -9,13 +9,9 @@ inputs:
     description: 'GitHub repository folder that contains the MQL scripts.'
     default: 'challenges'
     required: true
-  mongodb-container-workdir:
-    description: 'MongoDB container workdir to read the BSONs.'
-    default: 'project'
-    required: true
 outputs:
-  # result:
-  #   description: 'Jest unit tests JSON results in base64 format.'
+  result:
+    description: 'Evaluation JSON results in base64 format.'
   pr-number:
     description: 'Pull Request number that trigger build.'
 runs:
@@ -24,4 +20,3 @@ runs:
   args:
     - ${{ inputs.repository-import-folder }}
     - ${{ inputs.repository-challenges-folder }}
-    - ${{ inputs.mongodb-container-workdir }}

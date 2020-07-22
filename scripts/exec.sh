@@ -4,7 +4,6 @@ if [[ -z "$DBNAME" ]]; then
     printf "You must set envvar DBNAME"
     exit 1
 fi
-
 if [[ -z "$1"  ]]; then
     printf "You must give an path to MQL file as the first argument"
     exit 1
