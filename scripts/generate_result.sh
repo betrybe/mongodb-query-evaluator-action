@@ -1,16 +1,10 @@
 #!/bin/sh -l
-set -x
 
 if [[ -z "$1" ]]; then
     printf "You must pass the challenges dir as the first argument"
     exit 1
 fi
 CHALLENGES_DIR=$1
-if [[ -z "$2" ]]; then
-    printf "You must pass the Mongo container workdir as the second argument"
-    exit 1
-fi
-MONGO_WORKDIR=$2
 
 RESULTS_DIR="/tmp/trybe-results"
 mkdir "$RESULTS_DIR"
@@ -24,7 +18,7 @@ do
   resultPath="$RESULTS_DIR/$challengeName"
   touch "$resultPath"
   # Exec query into mongo container
-  /scripts/exec.sh "/$MONGO_WORKDIR/$CHALLENGES_DIR/$challengeName.js" &> "$resultPath"
+  /scripts/exec.sh "$entry" &> "$resultPath"
   # Check result with the expected
   diff=$(diff "$resultPath" /github/workspace/.challenges-expected/"$challengeName")
   if [[ ! -z "$diff" ]]; then

@@ -5,7 +5,7 @@ CHALLENGES_DIR=$2
 MONGO_WORKDIR=$3
 
 /scripts/importdb.sh "$IMPORT_DIR" "$MONGO_WORKDIR"
-/scripts/generate_result.sh "$CHALLENGES_DIR" "$MONGO_WORKDIR"
+/scripts/generate_result.sh "$CHALLENGES_DIR"
 
 if [ $? != 0 ]; then
   printf "Execution error"
