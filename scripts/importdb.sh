@@ -20,13 +20,13 @@ fi
 docker exec "$mongoContainerID" bash -c "mongo $DBNAME --eval 'db.dropDatabase()'"
 
 # Extract BSON's
-for entry in /github/workspace/"$IMPORT_DIR"/*.tar.gz
+for entry in "$IMPORT_DIR"/*.tar.gz
 do
-    tar -xvf "$entry" -C "/github/workspace/$IMPORT_DIR"
+    tar -xvf "$entry" -C "$IMPORT_DIR"
 done
 
 # Restore collections
-for entry in /github/workspace/"$IMPORT_DIR"/*.bson
+for entry in "$IMPORT_DIR"/*.bson
 do
-    /scripts/restore.sh "$entry"
+    scripts/restore.sh "$entry"
 done

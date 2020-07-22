@@ -5,6 +5,6 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - ./:/project
+      - /home:/home
     container_name: highway-mongodb
     network_mode: "bridge"
