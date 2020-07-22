@@ -3,6 +3,9 @@
 IMPORT_DIR=$1
 CHALLENGES_DIR=$2
 
+printf '%s' "$GITHUB_REPOSITORY"
+git log
+
 /scripts/importdb.sh "$IMPORT_DIR"
 /scripts/generate_result.sh "$CHALLENGES_DIR"
 

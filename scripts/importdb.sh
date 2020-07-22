@@ -16,7 +16,6 @@ if [[ -z "$mongoContainerID" ]]; then
     printf "MongoDB container not found"
     exit 1
 fi
-
 # Reset DB
 docker exec "$mongoContainerID" bash -c "mongo $DBNAME --eval 'db.dropDatabase()'"
 

@@ -16,6 +16,5 @@ if [[ -z "$mongoContainerID" ]]; then
     printf "MongoDB container not found"
     exit 1
 fi
-
 # Restore collection
 docker exec "$mongoContainerID" bash -c "mongorestore --db $DBNAME $BSON_PATH"
