@@ -19,5 +19,6 @@ if [[ -z "$mongoContainerID" ]]; then
 fi
 
 # Exec MQL
-cmd="mongo $DBNAME --quiet --eval 'DBQuery.shellBatchSize = 100000; $(cat $mqlFile)'"
+mql=$(cat "$mqlFile")
+cmd="mongo $DBNAME --quiet --eval 'DBQuery.shellBatchSize = 100000; $mql'"
 docker exec "$mongoContainerID" bash -c "$cmd" || exit 1
