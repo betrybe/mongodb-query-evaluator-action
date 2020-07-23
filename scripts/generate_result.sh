@@ -6,10 +6,12 @@ if [[ -z "$1" ]]; then
 fi
 CHALLENGES_DIR=$1
 if [[ -z "$2" ]]; then
-    printf "You must pass the expected dir as the second argument"
+    printf "You must pass the Trybe dir as the second argument"
     exit 1
 fi
-EXPECTED_DIR=$2
+TRYBE_DIR=$2
+
+ls -l "$TRYBE_DIR"
 
 RESULTS_DIR="/tmp/trybe-results"
 mkdir "$RESULTS_DIR"
@@ -25,27 +27,28 @@ scripts/exec.sh 'db.createCollection("trybe_evaluation")'
 doc='{"github_username": "'"$GITHUB_ACTOR"'","github_repository_name": "'"$GITHUB_REPOSITORY"'","evaluations": []}'
 scripts/exec.sh "db.trybe_evaluation.insertOne($doc)"
 
-identifier='{"github_username": "'"$GITHUB_ACTOR"'"}'
+collIdentifier='{"github_username": "'"$GITHUB_ACTOR"'"}'
 for entry in "$CHALLENGES_DIR"/*.js
 do
   # Get challenge name
-  challengeName=$(echo "$(basename $entry)" | sed -e "s/.js//g")
+  chName=$(echo "$(basename $entry)" | sed -e "s/.js//g")
   # Build path to results dir
-  resultPath="$RESULTS_DIR/$challengeName"
+  resultPath="$RESULTS_DIR/$chName"
   touch "$resultPath"
   # Exec query into mongo container
   mql=$(cat "$entry")
   scripts/exec.sh "$mql" &> "$resultPath"
-  # Check result with the expected and update result collection
-  diff=$(diff "$resultPath" "$EXPECTED_DIR/$challengeName")
+  # Check result with the expected and build doc to add into result collection
+  chDesc=$(cat requirements.json | jq -r ".requirements[] | select (.identifier==\"desafio2\") | .description")
+  diff=$(diff "$resultPath" "$TRYBE_DIR/expected-results/$chName")
   if [[ ! -z "$diff" ]]; then
-    update='{"$addToSet": {"evaluations": {"identifier": "'"$challengeName"'","description": "'"$challengeName"'","grade": 1}}}'
-    scripts/exec.sh "db.trybe_evaluation.update($identifier, $update)"
+    update='{"$addToSet": {"evaluations": {"identifier": "'"$chName"'","description": "'"$chDesc"'","grade": 1}}}'
+    scripts/exec.sh "db.trybe_evaluation.update($collIdentifier, $update)"
     continue
   fi
 
-  update='{"$addToSet": {"evaluations": {"identifier": "'"$challengeName"'","description": "'"$challengeName"'","grade": 3}}}'
-  scripts/exec.sh "db.trybe_evaluation.update($identifier, $update)"
+  update='{"$addToSet": {"evaluations": {"identifier": "'"$chName"'","description": "'"$chDesc"'","grade": 3}}}'
+  scripts/exec.sh "db.trybe_evaluation.update($collIdentifier, $update)"
 done
 
 scripts/exec.sh "db.trybe_evaluation.find()" > "$RESULTS_DIR/evaluation_result.json"

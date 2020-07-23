@@ -36,9 +36,9 @@ jobs:
 
 ```
 
-## Inputs
+### Inputs
 
-### `repository-import-folder`
+#### `repository-import-folder`
 
 GitHub repository on master dir that contains the `.bson` (compressed or not in `.tar.gz`) with the dataset collections to restore
 
@@ -49,7 +49,7 @@ assets/
 |--airlines.tar.gz
 ```
 
-### `repository-challenges-folder`
+#### `repository-challenges-folder`
 
 GitHub repository on student branch dir that contains the MQLs (e.g. `db.movies.find({})`) files with `.js` extension
 
@@ -61,17 +61,17 @@ challenges/
 |--...
 ```
 
-## Outputs
+### Outputs
 
-### `result`
+#### `result`
 
 Evaluation result JSON in base64 format.
 
-### `pr-number`
+#### `pr-number`
 
 Pull Request number that trigger build.
 
-## Requirements
+## Trybe requirements and expected results
 
 Project repository must create a file called `requirements.json` inside `.trybe` folder.
 
@@ -96,11 +96,11 @@ where the `"requirement #1"`, `"requirement #2"` and `"requirement #3"` are the 
 
 ## Expected results
 
-You must add the expected query results on your project repo
+You also must add the expected query results on your project repo into `.trybe/expected-results` folder
 
 ```
 # Example
-.challenges-expected/
+.trybe/expected-results/
 |--desafio1
 |--desafio2
 |--...

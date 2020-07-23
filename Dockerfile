@@ -3,6 +3,7 @@ FROM alpine:3.12.0
 RUN apk --update add docker && \
     apk add coreutils && \
     apk add git less openssh && \
+    apk add jq && \
     rm -rf /var/lib/apt/lists/* && \
     rm /var/cache/apk/*
 

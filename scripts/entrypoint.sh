@@ -7,7 +7,7 @@ git clone https://github.com/$GITHUB_REPOSITORY.git /github/master-repo/
 
 cd /
 scripts/importdb.sh "/github/workspace/$IMPORT_DIR"
-scripts/generate_result.sh "/github/workspace/$CHALLENGES_DIR" "/github/master-repo/.challenges-expected"
+scripts/generate_result.sh "/github/workspace/$CHALLENGES_DIR" "/github/master-repo"
 
 if [ $? != 0 ]; then
   printf "Execution error $?"
