@@ -17,4 +17,4 @@ if [[ -z "$mongoContainerID" ]]; then
     exit 1
 fi
 # Restore collection
-docker exec "$mongoContainerID" bash -c "mongorestore --db $DBNAME $BSON_PATH"
+docker exec "$mongoContainerID" bash -c "mongorestore --maintainInsertionOrder --db $DBNAME $BSON_PATH"

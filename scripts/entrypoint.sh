@@ -1,13 +1,12 @@
 #!/bin/sh -l
 
-IMPORT_DIR=$1
+DB_RESTORE_DIR=$1
 CHALLENGES_DIR=$2
 
 git clone https://github.com/$GITHUB_REPOSITORY.git /github/master-repo/
 
 cd /
-scripts/importdb.sh "/github/workspace/$IMPORT_DIR"
-scripts/generate_result.sh "/github/workspace/$CHALLENGES_DIR" "/github/master-repo"
+scripts/generate_result.sh "/github/workspace/$CHALLENGES_DIR" "/github/master-repo/.trybe" "/github/workspace/$DB_RESTORE_DIR"
 
 if [ $? != 0 ]; then
   printf "Execution error $?"

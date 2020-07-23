@@ -10,8 +10,11 @@ if [[ -z "$2" ]]; then
     exit 1
 fi
 TRYBE_DIR=$2
-
-ls -l "$TRYBE_DIR"
+if [[ -z "$3" ]]; then
+    printf "You must pass the Trybe DB restore dir as the third argument"
+    exit 1
+fi
+DB_RESTORE_DIR=$3
 
 RESULTS_DIR="/tmp/trybe-results"
 mkdir "$RESULTS_DIR"
@@ -30,6 +33,7 @@ scripts/exec.sh "db.trybe_evaluation.insertOne($doc)"
 collIdentifier='{"github_username": "'"$GITHUB_ACTOR"'"}'
 for entry in "$CHALLENGES_DIR"/*.js
 do
+  scripts/resetdb.sh "$DB_RESTORE_DIR"
   # Get challenge name
   chName=$(echo "$(basename $entry)" | sed -e "s/.js//g")
   # Build path to results dir
