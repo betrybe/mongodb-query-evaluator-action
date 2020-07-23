@@ -79,16 +79,23 @@ This file should have the following structure:
 
 ```json
 {
-  "requirements": [{
-    "description": "requirement #1",
-    "bonus": false
-  }, {
-    "description": "requirement #2",
-    "bonus": true
-  }, {
-    "description": "requirement #3",
-    "bonus": false
-  }]
+  "requirements": [
+    {
+      "identifier": "desafio1",
+      "description": "requirement #1",
+      "bonus": false
+    },
+    {
+      "identifier": "desafio2",
+      "description": "requirement #2",
+      "bonus": true
+    },
+    {
+      "identifier": "desafio3",
+      "description": "requirement #3",
+      "bonus": false
+    }
+  ]
 }
 ```
 
