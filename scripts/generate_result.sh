@@ -24,7 +24,7 @@ scripts/exec.sh 'db.createCollection("trybe_evaluation")'
 doc='{"github_username": "'"$GITHUB_ACTOR"'","github_repository_name": "'"$GITHUB_REPOSITORY"'","evaluations": []}'
 scripts/exec.sh "db.trybe_evaluation.insertOne($doc)"
 
-collIdentifier='{"github_username": "'"$GITHUB_ACTOR"'"}'
+docIdentifier='{"github_username": "'"$GITHUB_ACTOR"'"}'
 for entry in "$TRYBE_DIR/expected-results"/*
 do
   scripts/resetdb.sh "$DB_RESTORE_DIR"
@@ -38,7 +38,7 @@ do
   mqlFile="$CHALLENGES_DIR/$chName".js
   if [ ! -f $mqlFile ]; then
     update='{"$addToSet": {"evaluations": {"identifier": "'"$chName"'","description": "'"$chDesc"'","grade": 1}}}'
-    scripts/exec.sh "db.trybe_evaluation.update($collIdentifier, $update)"
+    scripts/exec.sh "db.trybe_evaluation.update($docIdentifier, $update)"
     continue
   fi
   # Exec query into mongo container
@@ -48,12 +48,13 @@ do
   diff=$(diff "$resultPath" "$TRYBE_DIR/expected-results/$chName")
   if [[ ! -z "$diff" ]]; then
     update='{"$addToSet": {"evaluations": {"identifier": "'"$chName"'","description": "'"$chDesc"'","grade": 1}}}'
-    scripts/exec.sh "db.trybe_evaluation.update($collIdentifier, $update)"
+    scripts/exec.sh "db.trybe_evaluation.update($docIdentifier, $update)"
     continue
   fi
 
   update='{"$addToSet": {"evaluations": {"identifier": "'"$chName"'","description": "'"$chDesc"'","grade": 3}}}'
-  scripts/exec.sh "db.trybe_evaluation.update($collIdentifier, $update)"
+  scripts/exec.sh "db.trybe_evaluation.update($docIdentifier, $update)"
 done
 
-scripts/exec.sh "db.trybe_evaluation.find()" > "$RESULTS_DIR/evaluation_result.json"
+scripts/exec.sh "db.trybe_evaluation.findOne($docIdentifier)" > "$RESULTS_DIR/evaluation_result.json"
+cat "$RESULTS_DIR/evaluation_result.json"
