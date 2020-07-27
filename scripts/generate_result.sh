@@ -19,31 +19,32 @@ DB_RESTORE_DIR=$3
 RESULTS_DIR="/tmp/trybe-results"
 mkdir "$RESULTS_DIR"
 
-# Get MongoDB Container ID
-mongoContainerID=$(docker ps --format "{{.ID}} {{.Names}}" | grep mongo | cut -d ' ' -f1)
-if [[ -z "$mongoContainerID" ]]; then
-    printf "MongoDB container not found"
-    exit 1
-fi
 # Create result collection with project data
 scripts/exec.sh 'db.createCollection("trybe_evaluation")'
 doc='{"github_username": "'"$GITHUB_ACTOR"'","github_repository_name": "'"$GITHUB_REPOSITORY"'","evaluations": []}'
 scripts/exec.sh "db.trybe_evaluation.insertOne($doc)"
 
 collIdentifier='{"github_username": "'"$GITHUB_ACTOR"'"}'
-for entry in "$CHALLENGES_DIR"/*.js
+for entry in "$TRYBE_DIR/expected-results"/*
 do
   scripts/resetdb.sh "$DB_RESTORE_DIR"
-  # Get challenge name
-  chName=$(echo "$(basename $entry)" | sed -e "s/.js//g")
+  # Get challenge name and desc
+  chName=$(echo "$(basename $entry)")
+  chDesc=$(cat "$TRYBE_DIR"/requirements.json | jq -r ".requirements[] | select (.identifier==\"desafio2\") | .description")
   # Build path to results dir
   resultPath="$RESULTS_DIR/$chName"
   touch "$resultPath"
+  # Check if challenge MQL file exists
+  mqlFile="$CHALLENGES_DIR/$chName".js
+  if [ ! -f $mqlFile ]; then
+    update='{"$addToSet": {"evaluations": {"identifier": "'"$chName"'","description": "'"$chDesc"'","grade": 1}}}'
+    scripts/exec.sh "db.trybe_evaluation.update($collIdentifier, $update)"
+    continue
+  fi
   # Exec query into mongo container
-  mql=$(cat "$entry")
+  mql=$(cat "$mqlFile")
   scripts/exec.sh "$mql" &> "$resultPath"
   # Check result with the expected and build doc to add into result collection
-  chDesc=$(cat requirements.json | jq -r ".requirements[] | select (.identifier==\"desafio2\") | .description")
   diff=$(diff "$resultPath" "$TRYBE_DIR/expected-results/$chName")
   if [[ ! -z "$diff" ]]; then
     update='{"$addToSet": {"evaluations": {"identifier": "'"$chName"'","description": "'"$chDesc"'","grade": 1}}}'
