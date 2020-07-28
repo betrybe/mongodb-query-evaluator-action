@@ -10,16 +10,6 @@ if [[ -z "$1" ]]; then
 fi
 DB_RESTORE_DIR=$1
 
-# Get MongoDB Container ID
-mongoContainerID=$(docker ps --format "{{.ID}} {{.Names}}" | grep mongo | cut -d ' ' -f1)
-if [[ -z "$mongoContainerID" ]]; then
-    printf "MongoDB container not found"
-    exit 1
-fi
-
-# Reset DB
-docker exec "$mongoContainerID" bash -c "mongo $DBNAME --eval 'db.dropDatabase()'"
-
 # Extract BSON's
 for entry in "$DB_RESTORE_DIR"/*.tar.gz
 do

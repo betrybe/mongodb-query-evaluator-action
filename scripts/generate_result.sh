@@ -1,5 +1,4 @@
 #!/bin/sh -l
-set -x
 
 if [[ -z "$1" ]]; then
     printf "You must pass the challenges dir as the first argument"
@@ -18,14 +17,19 @@ fi
 DB_RESTORE_DIR=$3
 
 RESULTS_DIR="/tmp/trybe-results"
+rm -rf "$RESULTS_DIR"
 mkdir "$RESULTS_DIR"
+
+# Reset DB
+scripts/exec.sh "db.dropDatabase()"
 
 # Create result collection with project data
 scripts/exec.sh 'db.createCollection("trybe_evaluation")'
 doc='{"github_username": "'"$GITHUB_ACTOR"'","github_repository_name": "'"$GITHUB_REPOSITORY"'","evaluations": []}'
 scripts/exec.sh "db.trybe_evaluation.insertOne($doc)"
-
 docIdentifier='{"github_username": "'"$GITHUB_ACTOR"'"}'
+
+# Check each expected challenge result with the MQL sent on PR in the challenges folder
 for entry in "$TRYBE_DIR/expected-results"/*
 do
   scripts/resetdb.sh "$DB_RESTORE_DIR"
@@ -57,6 +61,6 @@ do
   scripts/exec.sh "db.trybe_evaluation.update($docIdentifier, $update)"
 done
 
-scripts/exec.sh "db.trybe_evaluation.find()" > "$RESULTS_DIR/evaluation_result.json"
-echo "====== RESULTS ======"
+scripts/exec.sh "db.trybe_evaluation.findOne($docIdentifier, {_id: 0})" > "$RESULTS_DIR/evaluation_result.json"
+printf "======================== RESULTS ========================\n"
 cat "$RESULTS_DIR/evaluation_result.json"
