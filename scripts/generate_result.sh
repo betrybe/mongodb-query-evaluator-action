@@ -1,4 +1,5 @@
 #!/bin/sh -l
+set -x
 
 if [[ -z "$1" ]]; then
     printf "You must pass the challenges dir as the first argument"
@@ -57,4 +58,5 @@ do
 done
 
 scripts/exec.sh "db.trybe_evaluation.findOne($docIdentifier)" > "$RESULTS_DIR/evaluation_result.json"
+echo "====== RESULTS ======"
 cat "$RESULTS_DIR/evaluation_result.json"
