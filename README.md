@@ -33,6 +33,12 @@ jobs:
         with:
           repository-import-folder: 'assets'
           repository-challenges-folder: 'challenges'
+      - name: Store evaluation step
+        uses: betrybe/store-evaluation-action@v2
+        with:
+          evaluation-data: ${{ steps.evaluator.outputs.result }}
+          environment: staging
+          pr-number: ${{ github.event.number }}
 
 ```
 

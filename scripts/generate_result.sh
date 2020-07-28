@@ -31,7 +31,7 @@ do
   scripts/resetdb.sh "$DB_RESTORE_DIR"
   # Get challenge name and desc
   chName=$(echo "$(basename $entry)")
-  chDesc=$(cat "$TRYBE_DIR"/requirements.json | jq -r ".requirements[] | select (.identifier==\"desafio2\") | .description")
+  chDesc=$(cat "$TRYBE_DIR"/requirements.json | jq -r ".requirements[] | select (.identifier==\"$chName\") | .description")
   # Build path to results dir
   resultPath="$RESULTS_DIR/$chName"
   touch "$resultPath"
@@ -57,6 +57,6 @@ do
   scripts/exec.sh "db.trybe_evaluation.update($docIdentifier, $update)"
 done
 
-scripts/exec.sh "db.trybe_evaluation.findOne($docIdentifier)" > "$RESULTS_DIR/evaluation_result.json"
+scripts/exec.sh "db.trybe_evaluation.find()" > "$RESULTS_DIR/evaluation_result.json"
 echo "====== RESULTS ======"
 cat "$RESULTS_DIR/evaluation_result.json"
