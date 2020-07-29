@@ -19,5 +19,9 @@ done
 # Restore collections
 for entry in "$DB_RESTORE_DIR"/*.bson
 do
+    # Drop collection
+    collName=$(echo "$(basename $entry)" | sed -e "s/.bson//g")
+    scripts/exec.sh "db.$collName.drop()"
+    # Restore dump
     scripts/restore.sh "$entry"
 done
