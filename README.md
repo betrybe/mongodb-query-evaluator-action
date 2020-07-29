@@ -46,7 +46,8 @@ jobs:
 
 #### `repository-import-folder`
 
-GitHub repository on master dir that contains the `.bson` (compressed or not in `.tar.gz`) with the dataset collections to restore
+GitHub repository on master dir that contains the `.bson` (compressed or not in `.tar.gz`) with the dataset collections to restore.
+The collection name will be the same as the filename (e.g. `movies.bson` collection will be `movies`)
 
 ```
 # Example
