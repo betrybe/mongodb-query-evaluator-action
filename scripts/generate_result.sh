@@ -29,7 +29,9 @@ docIdentifier='{"github_username": "'"$GITHUB_ACTOR"'"}'
 
 # Add challenge result to evaluation collection
 function updateEvaluation {
-  grade=$1
+  chName=$1
+  chDesc=$2
+  grade=$3
   update='{"$addToSet": {"evaluations": {"identifier": "'"$chName"'","description": "'"$chDesc"'","grade": "'"$grade"'"}}}'
   DBNAME=trybe scripts/exec.sh "db.evaluation.update($docIdentifier, $update)"
 }
@@ -47,7 +49,7 @@ do
   # Check if challenge MQL file exists
   mqlFile="$CHALLENGES_DIR/$chName".js
   if [ ! -f $mqlFile ]; then
-    updateEvaluation 1
+    updateEvaluation "$chName" "$chDesc" 1
     continue
   fi
   # Exec query into mongo container
@@ -56,11 +58,11 @@ do
   # Check result with the expected and build doc to add into result collection
   diff=$(diff "$resultPath" "$TRYBE_DIR/expected-results/$chName")
   if [[ ! -z "$diff" ]]; then
-    updateEvaluation 1
+    updateEvaluation "$chName" "$chDesc" 1
     continue
   fi
 
-  updateEvaluation 3
+  updateEvaluation "$chName" "$chDesc" 3
 done
 
 DBNAME=trybe scripts/exec.sh "db.evaluation.findOne($docIdentifier, {_id: 0})" > "$RESULTS_DIR/evaluation_result.json"
