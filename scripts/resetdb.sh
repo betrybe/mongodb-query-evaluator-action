@@ -10,6 +10,9 @@ if [[ -z "$1" ]]; then
 fi
 DB_RESTORE_DIR=$1
 
+# Reset DB
+scripts/exec.sh "db.dropDatabase()"
+
 # Extract BSON's
 for entry in "$DB_RESTORE_DIR"/*.tar.gz
 do
@@ -19,9 +22,6 @@ done
 # Restore collections
 for entry in "$DB_RESTORE_DIR"/*.bson
 do
-    # Drop collection
-    collName=$(echo "$(basename $entry)" | sed -e "s/.bson//g")
-    scripts/exec.sh "db.$collName.drop()"
     # Restore dump
     scripts/restore.sh "$entry"
 done
