@@ -32,7 +32,7 @@ function updateEvaluation {
   chName=$1
   chDesc=$2
   grade=$3
-  update='{"$addToSet": {"evaluations": {"identifier": "'"$chName"'","description": "'"$chDesc"'","grade": "'"$grade"'"}}}'
+  update='{"$addToSet": {"evaluations": {"identifier": "'"$chName"'","description": "'"$chDesc"'","grade": '$grade' }}}'
   DBNAME=trybe scripts/exec.sh "db.evaluation.update($docIdentifier, $update)"
 }
 
