@@ -16,6 +16,13 @@ if [[ -z "$3" ]]; then
 fi
 DB_RESTORE_DIR=$3
 
+# Get MongoDB Container ID
+mongoContainerID=$(docker ps --format "{{.ID}} {{.Image}}" | grep mongo | cut -d ' ' -f1)
+if [[ -z "$mongoContainerID" ]]; then
+    printf "MongoDB container not found"
+    exit 1
+fi
+
 RESULTS_DIR="/tmp/trybe-results"
 rm -rf "$RESULTS_DIR"
 mkdir "$RESULTS_DIR"
@@ -52,9 +59,10 @@ do
     updateEvaluation "$chName" "$chDesc" 1
     continue
   fi
-  # Exec query into mongo container
-  mql=$(cat "$mqlFile")
-  scripts/exec.sh "$mql" &> "$resultPath"
+  # Exec MQL file into mongo container
+  cmd="mongo $DBNAME --quiet < $mqlFile"
+  docker exec "$mongoContainerID" bash -c "$cmd" &> "$resultPath"
+
   # Check result with the expected and build doc to add into result collection
   diff=$(diff "$resultPath" "$TRYBE_DIR/expected-results/$chName")
   if [[ ! -z "$diff" ]]; then
