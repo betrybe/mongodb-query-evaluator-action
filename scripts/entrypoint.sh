@@ -3,7 +3,7 @@
 DB_RESTORE_DIR=$1
 CHALLENGES_DIR=$2
 
-git clone --branch testa-mongodb-action https://github.com/$GITHUB_REPOSITORY.git /github/master-repo/
+git clone --branch testa-avaliador https://github.com/$GITHUB_REPOSITORY.git /github/master-repo/
 
 cd /
 scripts/generate_result.sh "/github/workspace/$CHALLENGES_DIR" "/github/master-repo/.trybe" "/github/workspace/$DB_RESTORE_DIR"
