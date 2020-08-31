@@ -46,14 +46,48 @@ jobs:
 
 #### `repository-import-folder`
 
-GitHub repository on master dir that contains the `.bson` (compressed or not in `.tar.gz`) with the dataset collections to restore.
-The collection name will be the same as the filename (e.g. `movies.bson` collection will be `movies`)
+GitHub repository on master directory that contains the `tar.gz` (compression of the `.bson` file) with the dataset collections to be restored.
+
+##### Observations
+
+1. The original `.bson` file will have its name the same as the collection's (e.g. `movies.bson` collection will be `movies`).
+
+2. For each `.tar.gz` file you must create a dump folder and put such file in it.
+
+  * If you have a correspondent `.json` metadata file originated from the MongoDB dumping process, you may put it into the folder as well.
+
+3. If a dump folder contains one `tar.gz` file whose size is greater than `10MB`, you **must split** the file into pieces and put them in a subfolder called `splitted-files`. This must happen due to a GitHub restriction that does not allow a template repository to have any file whose size is greater than `10MB`. In order to split the file, you must use the [`split`](https://man7.org/linux/man-pages/man1/split.1.html) command. For example, suppose you have a file called `voos.tar.gz` (whose size is `20MB`) and you want to split it into `10MB` files, `voos.tar.gz.part-aa` and `voos.tar.gz.part-ab`. You can achieve this by doing:
+
+```bash
+split -b 10m voos.tar.gz voos.tar.gz.part-
+```
+
+  * The `splitted-files` folder **must contain only the splitted files originated from the split operation**;
+
+  * You **cannot** have more than one `splitted-files` folder in the same dump folder;
+
+  * If you have a dump folder with the `splitted-files` subfolder, you **cannot** have a `dump.tar.gz` inside the dump folder, as this name is reserved for recreating the original compressed file located at the `splitted-files` subfolder.
+
+---
+
+Suppose you have set the `assets` directory for the `repository-import-folder` input. Here follows an example showing the `assets` directory containing the necessary files to be restored, listing the possible cases covered by the evaluator.
 
 ```
-# Example
 assets/
-|--movies.bson
-|--airlines.tar.gz
+|--first-dump/
+|----compressed-first-dump-file.tar.gz
+|--another-dump/
+|----another-dump.metadata.json
+|----splitted-files/
+|------compressed-dump-file-part-aa
+|------compressed-dump-file-part-ab
+|------compressed-dump-file-part-ac
+|--another-one-dump/
+|----splitted-files/
+|------compressed-dump-file-part-aa
+|------compressed-dump-file-part-ab
+|------compressed-dump-file-part-ac
+|------compressed-dump-file-part-ad
 ```
 
 #### `repository-challenges-folder`
