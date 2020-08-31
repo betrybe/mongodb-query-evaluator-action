@@ -13,14 +13,19 @@ DB_RESTORE_DIR=$1
 # Reset DB
 scripts/exec.sh "db.dropDatabase()"
 
+scripts/join_splitted_files.sh "$DB_RESTORE_DIR"
+
 # Extract BSON's
-for entry in "$DB_RESTORE_DIR"/*.tar.gz
+for assetDirectory in "$DB_RESTORE_DIR"/*/
 do
-    tar -xvf "$entry" -C "$DB_RESTORE_DIR"
+    for compressedFile in "$assetDirectory"*.tar.gz
+    do
+        tar -xvf "$compressedFile" -C "$assetDirectory"
+    done
 done
 
 # Restore collections
-for entry in "$DB_RESTORE_DIR"/*.bson
+for entry in "$DB_RESTORE_DIR"/*/*.bson
 do
     # Restore dump
     scripts/restore.sh "$entry"
