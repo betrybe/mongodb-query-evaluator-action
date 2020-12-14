@@ -6,6 +6,8 @@ This action evaluate MongoDB MQLs projects by executing queries into a MongoDB d
 
 To call the evaluator action you must create `.github/workflows/main.yml` in the project repo with the MongoDB docker container
 
+You should check the last release [here](https://github.com/betrybe/mongodb-query-evaluator-action/releases) to use the most recent stable version of the evaluator.
+
 You must provide the `DBNAME` envvar and set the inputs (detailed below):
 
 ```yml
@@ -26,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: MongoDB Query Evaluator Step
-        uses: betrybe/mongodb-query-evaluator-action@master
+        uses: betrybe/mongodb-query-evaluator-action@v2
         id: mongodb-query-evaluator
         env:
           DBNAME: 'aggregations'
