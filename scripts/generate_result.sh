@@ -56,7 +56,7 @@ do
   mql=$(cat "$mqlFile")
   scripts/exec.sh "$mql" &> "$resultPath"
   # Check result with the expected and build doc to add into result collection
-  diff=$(diff "$resultPath" "$TRYBE_DIR/expected-results/$chName")
+  diff=$(diff "$resultPath" "$TRYBE_DIR/expected-results/$chName" --ignore-all-space)
   if [[ ! -z "$diff" ]]; then
     updateEvaluation "$chName" "$chDesc" 1
     continue
