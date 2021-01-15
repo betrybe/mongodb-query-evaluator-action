@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: MongoDB Query Evaluator Step
-        uses: betrybe/mongodb-query-evaluator-action@v2
+        uses: betrybe/mongodb-query-evaluator-action@v3
         id: mongodb-query-evaluator
         env:
           DBNAME: 'aggregations'
@@ -109,10 +109,6 @@ challenges/
 #### `result`
 
 Evaluation result JSON in base64 format.
-
-#### `pr-number`
-
-Pull Request number that trigger build.
 
 ## Trybe requirements and expected results
 
