@@ -4,7 +4,7 @@ DB_RESTORE_DIR=$1
 CHALLENGES_DIR=$2
 
 cd /
-scripts/generate_result.sh "/github/workspace/$CHALLENGES_DIR" "/github/master-repo/.trybe" "/github/workspace/$DB_RESTORE_DIR"
+scripts/generate_result.sh "/github/workspace/$CHALLENGES_DIR" "/github/workspace/.trybe" "/github/workspace/$DB_RESTORE_DIR"
 
 if [ $? != 0 ]; then
   printf "Execution error $?"
