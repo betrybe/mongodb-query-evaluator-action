@@ -1,13 +1,16 @@
 name: 'MongoDB query evaluator'
 description: 'MongoDB query evaluator action for Tryber projects'
 inputs:
-  repository-import-folder:
-    description: 'GitHub repository folder that contains the BSONs.'
+  db_restore_dir:
+    description: 'GitHub repository directory that contains the dataset collections to be restored.'
     default: 'assets'
     required: true
-  repository-challenges-folder:
-    description: 'GitHub repository folder that contains the MQL scripts.'
+  challenges_dir:
+    description: 'GitHub repository directory that contains the student MQL scripts.'
     default: 'challenges'
+    required: true
+  pr_author_username:
+    description: 'Pull Request author username.'
     required: true
 outputs:
   result:
@@ -15,6 +18,3 @@ outputs:
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  args:
-    - ${{ inputs.repository-import-folder }}
-    - ${{ inputs.repository-challenges-folder }}
