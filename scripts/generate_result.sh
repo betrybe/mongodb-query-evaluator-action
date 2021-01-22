@@ -23,9 +23,9 @@ mkdir "$RESULTS_DIR"
 # Create result collection with project data
 DBNAME=trybe scripts/exec.sh "db.dropDatabase()"
 DBNAME=trybe scripts/exec.sh 'db.createCollection("evaluation")'
-doc='{"github_username": "'"$GITHUB_ACTOR"'","github_repository_name": "'"$GITHUB_REPOSITORY"'","evaluations": []}'
+doc='{"github_username": "'"$INPUT_PR_AUTHOR_USERNAME"'","github_repository_name": "'"$GITHUB_REPOSITORY"'","evaluations": []}'
 DBNAME=trybe scripts/exec.sh "db.evaluation.insertOne($doc)"
-docIdentifier='{"github_username": "'"$GITHUB_ACTOR"'"}'
+docIdentifier='{"github_username": "'"$INPUT_PR_AUTHOR_USERNAME"'"}'
 
 # Add challenge result to evaluation collection
 function updateEvaluation {

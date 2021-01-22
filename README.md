@@ -46,9 +46,25 @@ jobs:
 
 ### Inputs
 
-#### `repository-import-folder`
+This action accepts the following configuration parameters via `with:`
 
-GitHub repository on master directory that contains the `tar.gz` (compression of the `.bson` file) with the dataset collections to be restored.
+- `db_restore_dir`
+
+  **Required**
+
+  GitHub repository directory that contains the dataset collections to be restored.
+
+  - `challenges_dir`
+
+  **Required**
+
+  GitHub repository directory that contains the student MQL scripts.
+
+- `pr_author_username`
+
+  **Required**
+
+  Pull Request author username.
 
 ##### Observations
 
