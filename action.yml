@@ -12,8 +12,6 @@ inputs:
 outputs:
   result:
     description: 'Evaluation JSON results in base64 format.'
-  pr-number:
-    description: 'Pull Request number that trigger build.'
 runs:
   using: 'docker'
   image: 'Dockerfile'
