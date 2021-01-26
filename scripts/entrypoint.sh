@@ -9,4 +9,3 @@ if [ $? != 0 ]; then
 fi
 
 echo ::set-output name=result::`cat /tmp/trybe-results/evaluation_result.json | base64 -w 0`
-echo ::set-output name=pr-number::$(echo "$GITHUB_REF" | awk -F / '{print $3}')
