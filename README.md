@@ -12,8 +12,20 @@ You must provide the `DBNAME` envvar and set the inputs (detailed below):
 
 ```yml
 on:
-  pull_request:
-    types: [opened, synchronize]
+  workflow_dispatch:
+    inputs:
+      dispatch_token:
+        description: 'Token that authorize the dispatch'
+        required: true
+      head_sha:
+        description: 'Head commit SHA that dispatched the workflow'
+        required: true
+      pr_author_username:
+        description: 'Pull Request author username'
+        required: true
+      pr_number:
+        description: 'Pull Request number that dispatched the workflow'
+        required: true
 
 jobs:
   evaluator_job:
@@ -28,19 +40,20 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: MongoDB Query Evaluator Step
-        uses: betrybe/mongodb-query-evaluator-action@v3
-        id: mongodb-query-evaluator
+        uses: betrybe/mongodb-query-evaluator-action@v4
+        id: mongodb_evaluator
         env:
           DBNAME: 'aggregations'
         with:
-          repository-import-folder: 'assets'
-          repository-challenges-folder: 'challenges'
+          db_restore_dir: 'assets'
+          challenges_dir: 'challenges'
+          pr_author_username: ${{ github.event.inputs.pr_author_username }}
       - name: Store evaluation step
         uses: betrybe/store-evaluation-action@v2
         with:
-          evaluation-data: ${{ steps.evaluator.outputs.result }}
+          evaluation-data: ${{ steps.mongodb_evaluator.outputs.result }}
           environment: staging
-          pr-number: ${{ github.event.number }}
+          pr-number: ${{ github.event.inputs.pr_number }}
 
 ```
 
@@ -54,7 +67,7 @@ This action accepts the following configuration parameters via `with:`
 
   GitHub repository directory that contains the dataset collections to be restored.
 
-  - `challenges_dir`
+- `challenges_dir`
 
   **Required**
 
@@ -65,6 +78,12 @@ This action accepts the following configuration parameters via `with:`
   **Required**
 
   Pull Request author username.
+
+## Outputs
+
+- `result`
+
+  MongoDB Query evaluator JSON results in base64 format.
 
 ##### Observations
 
@@ -88,7 +107,7 @@ split -b 10m voos.tar.gz voos.tar.gz.part-
 
 ---
 
-Suppose you have set the `assets` directory for the `repository-import-folder` input. Here follows an example showing the `assets` directory containing the necessary files to be restored, listing the possible cases covered by the evaluator.
+Suppose you have set the `assets` directory for the `db_restore_dir` input. Here follows an example showing the `assets` directory containing the necessary files to be restored, listing the possible cases covered by the evaluator.
 
 ```
 assets/
@@ -108,7 +127,7 @@ assets/
 |------compressed-dump-file-part-ad
 ```
 
-#### `repository-challenges-folder`
+#### `challenges_dir`
 
 GitHub repository on student branch dir that contains the MQLs (e.g. `db.movies.find({})`) files with `.js` extension
 
