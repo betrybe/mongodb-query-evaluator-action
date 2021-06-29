@@ -31,7 +31,7 @@ DBNAME=trybe scripts/exec.sh "db.evaluation.insertOne($doc)"
 docIdentifier='{"github_username": "'"$INPUT_PR_AUTHOR_USERNAME"'"}'
 
 # Add challenge result to evaluation collection
-function updateEvaluation {
+updateEvaluation() {
   chName=$1
   chDesc=$2
   grade=$3
@@ -56,10 +56,10 @@ do
     continue
   fi
   # Exec query into mongo container and sort result
-  mql=$(cat "$mqlFile")
+  mql=$(cat "$mqlFile" | sed -r "s/;+$//")
   scripts/exec.sh "$mql" | jq -S &> "$resultPath"
   # Sort expected result
-  cat $TRYBE_DIR/expected-results/$chName | jq -S > "/tmp/expected_sorted"
+  cat "$TRYBE_DIR/expected-results/$chName" | jq -S > "/tmp/expected_sorted"
   # Check result with the expected and build doc to add into result collection
   diff=$(diff "$resultPath" "/tmp/expected_sorted" --ignore-all-space)
   if [[ ! -z "$diff" ]]; then
