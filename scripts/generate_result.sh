@@ -1,5 +1,8 @@
 #!/bin/sh -l
 
+CORRECT_GRADE=3
+INCORRECT_GRADE=1
+
 if [[ -z "$1" ]]; then
     printf "You must pass the challenges dir as the first argument\n"
     exit 1
@@ -28,7 +31,7 @@ DBNAME=trybe scripts/exec.sh "db.evaluation.insertOne($doc)"
 docIdentifier='{"github_username": "'"$INPUT_PR_AUTHOR_USERNAME"'"}'
 
 # Add challenge result to evaluation collection
-function updateEvaluation {
+updateEvaluation() {
   chName=$1
   chDesc=$2
   grade=$3
@@ -49,20 +52,22 @@ do
   # Check if challenge MQL file exists
   mqlFile="$CHALLENGES_DIR/$chName".js
   if [ ! -f $mqlFile ]; then
-    updateEvaluation "$chName" "$chDesc" 1
+    updateEvaluation "$chName" "$chDesc" $INCORRECT_GRADE
     continue
   fi
-  # Exec query into mongo container
-  mql=$(cat "$mqlFile")
-  scripts/exec.sh "$mql" &> "$resultPath"
+  # Exec query into mongo container and sort result
+  mql=$(cat "$mqlFile" | sed -r "s/;+$//")
+  scripts/exec.sh "$mql" | jq ._batch[] -S &> "$resultPath"
+  # Sort expected result
+  cat "$TRYBE_DIR/expected-results/$chName" | jq -S > "/tmp/expected_sorted"
   # Check result with the expected and build doc to add into result collection
-  diff=$(diff "$resultPath" "$TRYBE_DIR/expected-results/$chName" --ignore-all-space)
+  diff=$(diff "$resultPath" "/tmp/expected_sorted" --ignore-all-space)
   if [[ ! -z "$diff" ]]; then
-    updateEvaluation "$chName" "$chDesc" 1
+    updateEvaluation "$chName" "$chDesc" $INCORRECT_GRADE
     continue
   fi
 
-  updateEvaluation "$chName" "$chDesc" 3
+  updateEvaluation "$chName" "$chDesc" $CORRECT_GRADE
 done
 
 DBNAME=trybe scripts/exec.sh "db.evaluation.findOne($docIdentifier, {_id: 0})" > "$RESULTS_DIR/evaluation_result.json"
