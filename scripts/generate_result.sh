@@ -57,7 +57,7 @@ do
   fi
   # Exec query into mongo container and sort result
   mql=$(cat "$mqlFile" | sed -r "s/;+$//")
-  scripts/exec.sh "$mql" | jq -S &> "$resultPath"
+  scripts/exec.sh "$mql" | jq ._batch[] -S &> "$resultPath"
   # Sort expected result
   cat "$TRYBE_DIR/expected-results/$chName" | jq -S > "/tmp/expected_sorted"
   # Check result with the expected and build doc to add into result collection
